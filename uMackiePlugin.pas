@@ -17,6 +17,9 @@ const
   MACKIE_PARAMETER_DATA_TYPES : array[TMackiePluginParameterDataType] of string = ('level','pan','freq','switch','boost/cut','spread');
 
 type
+
+  { TMackiePluginParameter }
+
   TMackiePluginParameter = class(TObject)
   private
     FHasDefaultValue: boolean;
@@ -31,12 +34,17 @@ type
     FEQVPot: string;
     FParameterName: string;
     FOriginalComment : string;
+    FDisplayLabel : string;
+    FControlLabelName : string;
+    FOriginalLabelComment : string;
+    procedure SetControlLabelName(AValue: string);
     procedure SetControlName(const Value: string);
     procedure SetDataType(const Value: TMackiePluginParameterDataType);
     procedure SetDefaultValue(const Value: Double);
     procedure SetHasDefaultValue(const Value: boolean);
     procedure SetHasIncrement(const Value: boolean);
     procedure SetIncrement(const Value: Double);
+    procedure SetOriginalLabelComment(AValue: string);
     procedure SetParamNumber(const Value: integer);
     procedure SetIsAssigned(const Value: boolean);
     procedure SetEQVPot(const Value: string);
@@ -58,10 +66,16 @@ type
     property IsEQAssigned : boolean read FIsEQAssigned write SetIsEQAssigned;
     property EQVPot : string read FEQVPot write SetEQVPot;
     property OriginalComment : string read FOriginalComment write SetOriginalComment;
+    property DisplayLabel : string read FDisplayLabel write FDisplayLabel;
+    property ControlLabelName : string read FControlLabelName write SetControlLabelName;
+    property OriginalLabelComment : string read FOriginalLabelComment write SetOriginalLabelComment;
   end;
+
+  { TMackieC4Plugin }
 
   TMackieC4Plugin = class(TObject)
   private
+    FDisplayLabel: string;
     FPluginName: string;
     FNumVPots : integer;
     FNumFreqBands : integer;
@@ -78,6 +92,7 @@ type
     function IndexesFromName(paramName : string; var mIndex, pIndex : integer) : boolean;
     procedure SetParameterIniValues(paramName, paramValues : string);
     procedure SetParameterEQIniValues(paramName, paramValues : string);
+    procedure SetParameterNameIniValues(paramName, paramValues : string);
     function GetParameterByIndexes(mIndex, pIndex : integer) : TMackiePluginParameter;
     procedure PopulateMissingParamNamesWithOriginalComment;
     function AssignedCount : integer;
@@ -87,6 +102,7 @@ type
     property NumVPots : integer read FNumVPots write FNumVPots;
     property NumFreqBands : integer read FNumFreqBands write FNumFreqBands;
     property PluginType : TMackiePluginType read FPluginType write FPluginType;
+    property DisplayLabel : string read FDisplayLabel write FDisplayLabel;
   end;
 
   TMackieC4PluginList = class(TObjectList)
@@ -239,6 +255,10 @@ begin
               else
                 c4plugin.NumFreqBands := 0;
             end
+            else if (pos('VPotLabel',paramName) > 0) then
+            begin
+              c4plugin.SetParameterNameIniValues(paramName, params);
+            end
             else if (Pos('VPot',paramName) > 0) then
               c4plugin.SetParameterIniValues(paramName, params)
             else
@@ -274,6 +294,7 @@ begin
 
   DataType := aParam.DataType;
   OriginalComment := aParam.OriginalComment;
+  DisplayLabel := aParam.DisplayLabel;
 
   IsEQAssigned := aParam.IsEQAssigned;
   EQVPot := aParam.EQVPot;
@@ -282,6 +303,7 @@ end;
 constructor TMackiePluginParameter.Create;
 begin
   FControlName := 'VPot0';
+  FControlLabelName := 'VPotLabel0';
   FParamNumber := -1;
   FParameterName := '';
   FHasDefaultValue := false;
@@ -318,6 +340,11 @@ begin
   FControlName := Value;
 end;
 
+procedure TMackiePluginParameter.SetControlLabelName(AValue: string);
+begin
+  FControlLabelName:=AValue;
+end;
+
 procedure TMackiePluginParameter.SetDataType(const Value: TMackiePluginParameterDataType);
 begin
   FDataType := Value;
@@ -350,6 +377,11 @@ end;
 procedure TMackiePluginParameter.SetIncrement(const Value: Double);
 begin
   FIncrement := Value;
+end;
+
+procedure TMackiePluginParameter.SetOriginalLabelComment(AValue: string);
+begin
+  FOriginalLabelComment:=AValue;
 end;
 
 procedure TMackiePluginParameter.SetIsAssigned(const Value: boolean);
@@ -403,9 +435,15 @@ begin
     begin
       FControls[i,j] := TMackiePluginParameter.Create;
       if (i > 0) then
-        FControls[i,j].ControlName := 'M' + inttostr(i) + 'VPot' + inttostr(j)
+      begin
+        FControls[i,j].ControlName := 'M' + inttostr(i) + 'VPot' + inttostr(j);
+        FControls[i,j].ControlLabelName := 'M' + inttostr(i) + 'VPotLabel' + inttostr(j);
+      end
       else
+      begin
         FControls[i,j].ControlName := 'VPot' + inttostr(j);
+        FControls[i,j].ControlLabelName := 'VPotLabel' + inttostr(j);
+      end;
     end;
 end;
 
@@ -572,6 +610,56 @@ begin
   end;
 end;
 
+procedure TMackieC4Plugin.SetParameterNameIniValues(paramName, paramValues: string);
+var
+  param : TMackiePluginParameter;
+  sl : TStringList;
+  err : integer;
+  iVal : integer;
+  s : string;
+  i : integer;
+  p : integer;
+begin
+  param := GetPluginParameter(paramName);
+  if (param <> nil) then
+  begin
+    sl := TStringList.Create;
+    try
+      try
+        param.ControlName := StringReplace(paramName,'Label','',[rfReplaceAll]);
+        param.ControlLabelName := paramName;
+
+        sl.CommaText := paramValues;
+        if (sl.Count > 0) then
+        begin
+          Val(trim(sl[0]), iVal, err);
+          if (err = 0) then
+            param.ParamNumber := iVal;
+        end;
+
+        if (sl.Count > 1) then
+        begin
+          s := '';
+          p := pos(',',paramValues);
+          if (p > 0) then
+          begin
+            s := Copy(paramValues,p+1,(length(paramValues) - (p+1)));
+            i := length(s);
+            if (i > 6) then i := 6;
+            param.DisplayLabel := trim(Copy(s,1,i));
+          end;
+        end;
+
+        if (param.ParamNumber >= 0) then
+          param.IsAssigned := true;
+      except
+      end;
+    finally
+      sl.Free;
+    end;
+  end;
+end;
+
 
 function TMackieC4Plugin.GetPluginParameter(Index: string): TMackiePluginParameter;
 var
@@ -596,6 +684,7 @@ begin
   vPotPos := Pos('VPot', paramName);
   if (vPotPos > 0) then
   begin
+    paramName := StringReplace(paramName, 'Label', '', [rfReplaceAll]);
     valStr := Copy(paramName, vPotPos+4, length(paramName) - (vPotPos+3));
 
     if (vPotPos = 1) then
@@ -723,6 +812,24 @@ begin
       end;
     end;
 
+    // VPot Param Labels
+    for m := 0 to 4 do
+      for p := 0 to 31 do
+      begin
+        param := GetParameterByIndexes(m,p);
+        if (param.IsAssigned) and (param.DisplayLabel <> '') then
+        begin
+          s := param.ControlLabelName + '=' + inttostr(param.ParamNumber) + ',' + param.DisplayLabel;
+
+          if param.ParameterName <> '' then
+            s := s + #9 + #9 + '; ' + param.ParameterName
+          else if param.OriginalLabelComment <> '' then
+            s := s + #9 + #9 + ';' + param.OriginalComment;
+
+          sl.Add(s);
+        end;
+      end;
+
     sl.Add('');
     result := sl.Text;
   finally
@@ -741,7 +848,10 @@ begin
       for p := 0 to 31 do
       begin
         if (FControls[m,p].IsAssigned) and (FControls[m,p].ParameterName = '') then
+        begin
           FControls[m,p].OriginalComment := FIni.GetComment(PluginName, FControls[m,p].ControlName);
+          FControls[m,p].OriginalLabelComment := FIni.GetComment(PluginName, FControls[m,p].ControlLabelName);
+        end;
       end;
   finally
     FreeAndNil(FIni);

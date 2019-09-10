@@ -25,6 +25,42 @@ type
 
   TForm1 = class(TForm)
     btnKeyFocus: TButton;
+    ebVPotDisplayLabel: TEdit;
+    lblParamDisplayLabel: TLabel;
+    txtKnobTextDisp1: TStaticText;
+    txtKnobTextDisp10: TStaticText;
+    txtKnobTextDisp11: TStaticText;
+    txtKnobTextDisp12: TStaticText;
+    txtKnobTextDisp13: TStaticText;
+    txtKnobTextDisp14: TStaticText;
+    txtKnobTextDisp15: TStaticText;
+    txtKnobTextDisp16: TStaticText;
+    txtKnobTextDisp17: TStaticText;
+    txtKnobTextDisp18: TStaticText;
+    txtKnobTextDisp19: TStaticText;
+    txtKnobTextDisp2: TStaticText;
+    txtKnobTextDisp20: TStaticText;
+    txtKnobTextDisp21: TStaticText;
+    txtKnobTextDisp22: TStaticText;
+    txtKnobTextDisp23: TStaticText;
+    txtKnobTextDisp24: TStaticText;
+    txtKnobTextDisp25: TStaticText;
+    txtKnobTextDisp26: TStaticText;
+    txtKnobTextDisp27: TStaticText;
+    txtKnobTextDisp28: TStaticText;
+    txtKnobTextDisp29: TStaticText;
+    txtKnobTextDisp3: TStaticText;
+    txtKnobTextDisp30: TStaticText;
+    txtKnobTextDisp31: TStaticText;
+    txtKnobTextDisp32: TStaticText;
+    txtKnobTextDisp4: TStaticText;
+    txtKnobTextDisp5: TStaticText;
+    txtKnobTextDisp6: TStaticText;
+    txtKnobTextDisp7: TStaticText;
+    txtKnobTextDisp8: TStaticText;
+    txtKnobTextDisp9: TStaticText;
+    VPotKnobImage: TImage;
+    KnobImageList: TImageList;
     Panel1: TPanel;
     pnlConsole: TPanel;
     pnlProperties: TPanel;
@@ -139,6 +175,8 @@ type
     btnReload: TSpeedButton;
     txtDebug: TMemo;
     procedure btnKeyFocusKeyPress(Sender: TObject; var Key: char);
+    procedure ebVPotDisplayLabelChange(Sender: TObject);
+    procedure ebVPotDisplayLabelKeyPress(Sender: TObject; var Key: char);
     procedure KnobImageDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure KnobImageDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure lbParametersDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
@@ -171,14 +209,19 @@ type
     FUpdatingDisplay : boolean;
     FLabels : array [0..31] of TStaticText;
     FKnobImages : array [0..31] of TImage;
+    FDisplayLabels : array [0..31] of TStaticText;
     FCurrentMackiePlugin : TMackieC4Plugin;
     FCurrentMackiePluginParameter : TMackiePluginParameter;
+    FCurrentParameterKnobIdx : integer;
     FCurrentKeyMode : TKeyPressMode;
     procedure LoadBitmaps;
     procedure EnableDisableEQControls;
     procedure LoadDataFiles;
     procedure WmAfterShow(var Msg: TMessage); message WM_AFTER_SHOW;
-    function GetCurrentModifier : integer;   
+    function GetCurrentModifier : integer;
+    procedure CopyImageFromImageList(imgIdx : integer; var img : TImage);
+    procedure UpdateKnobImages;
+    procedure UpdateDisplayLabel(modifier, index : integer);
   public
     { Public declarations }
     procedure UpdateDisplay;
@@ -190,9 +233,12 @@ var
 implementation
 
 uses
-  uCWPlugin, FolderHelper;
+  uCWPlugin, FolderHelper, uStringCruncher;
 
 {$R *.dfm}
+
+const
+  IDX_BLANK_KNOB_IMAGE = 6;
 
 { TForm1 }
 
@@ -237,6 +283,7 @@ begin
     if (okToContinue) then
     begin
       m := GetCurrentModifier;
+      FCurrentParameterKnobIdx := p;
       FCurrentMackiePluginParameter := FCurrentMackiePlugin.GetParameterByIndexes(m,p);
 
       param := TCWPluginParameter(lbParameters.Items.Objects[lbParameters.ItemIndex]);
@@ -390,6 +437,37 @@ begin
   else
     FCurrentKeyMode := kpmNone;
 end;
+
+procedure TForm1.ebVPotDisplayLabelChange(Sender: TObject);
+begin
+  if not(FPluginsLoaded) then
+    exit;
+
+  if (FUpdatingDisplay = false) and (FCurrentMackiePlugin <> nil) and (FCurrentMackiePluginParameter <> nil) then
+  begin
+    FCurrentMackiePluginParameter.DisplayLabel := trim(ebVPotDisplayLabel.Text);
+    if (FCurrentParameterKnobIdx >= 0) then
+    begin
+        UpdateDisplayLabel(GetCurrentModifier, FCurrentParameterKnobIdx);
+    end;
+  end;
+end;
+
+procedure TForm1.ebVPotDisplayLabelKeyPress(Sender: TObject; var Key: char);
+begin
+  if (Key > ' ') then
+  begin
+    if (length(ebVPotDisplayLabel.Text) >= 6) then
+    begin
+      Key := #0;
+      exit;
+    end;
+
+    if (not(Key in ['a'..'z','A'..'Z','0'..'9','-','_'])) then
+      Key := #0;
+  end;
+end;
+
 {$POP}
 
 procedure TForm1.KnobImageDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
@@ -464,11 +542,13 @@ begin
     for i := 0 to cwPlugin.Parameters.Count-1 do
       lbParameters.AddItem(cwPlugin.Parameter[i].ParamName, cwPlugin.Parameter[i]);
 
+    gbPluginParameters.Caption := 'Parameters (' + inttostr(cwPlugin.Parameters.Count) + ')';
     lbParameters.Items.EndUpdate;
     FCurrentMackiePluginParameter := nil;
   end
   else
   begin
+    gbPluginParameters.Caption := 'Parameters';
     lbCurrentPluginName.Caption := '';
     lbParameters.Items.Clear;
     FCurrentMackiePlugin := nil;
@@ -520,7 +600,6 @@ begin
   if (FCurrentMackiePlugin <> nil) then
     FCurrentMackiePlugin.NumFreqBands := numBands;
 end;
-
 
 procedure TForm1.EnableDisableEQControls;
 var
@@ -688,6 +767,39 @@ begin
   FLabels[30] := KnobText31;
   FLabels[31] := KnobText32;
 
+  FDisplayLabels[0] := txtKnobTextDisp1;
+  FDisplayLabels[1] := txtKnobTextDisp2;
+  FDisplayLabels[2] := txtKnobTextDisp3;
+  FDisplayLabels[3] := txtKnobTextDisp4;
+  FDisplayLabels[4] := txtKnobTextDisp5;
+  FDisplayLabels[5] := txtKnobTextDisp6;
+  FDisplayLabels[6] := txtKnobTextDisp7;
+  FDisplayLabels[7] := txtKnobTextDisp8;
+  FDisplayLabels[8] := txtKnobTextDisp9;
+  FDisplayLabels[9] := txtKnobTextDisp10;
+  FDisplayLabels[10] := txtKnobTextDisp11;
+  FDisplayLabels[11] := txtKnobTextDisp12;
+  FDisplayLabels[12] := txtKnobTextDisp13;
+  FDisplayLabels[13] := txtKnobTextDisp14;
+  FDisplayLabels[14] := txtKnobTextDisp15;
+  FDisplayLabels[15] := txtKnobTextDisp16;
+  FDisplayLabels[16] := txtKnobTextDisp17;
+  FDisplayLabels[17] := txtKnobTextDisp18;
+  FDisplayLabels[18] := txtKnobTextDisp19;
+  FDisplayLabels[19] := txtKnobTextDisp20;
+  FDisplayLabels[20] := txtKnobTextDisp21;
+  FDisplayLabels[21] := txtKnobTextDisp22;
+  FDisplayLabels[22] := txtKnobTextDisp23;
+  FDisplayLabels[23] := txtKnobTextDisp24;
+  FDisplayLabels[24] := txtKnobTextDisp25;
+  FDisplayLabels[25] := txtKnobTextDisp26;
+  FDisplayLabels[26] := txtKnobTextDisp27;
+  FDisplayLabels[27] := txtKnobTextDisp28;
+  FDisplayLabels[28] := txtKnobTextDisp29;
+  FDisplayLabels[29] := txtKnobTextDisp30;
+  FDisplayLabels[30] := txtKnobTextDisp31;
+  FDisplayLabels[31] := txtKnobTextDisp32;
+
   FKnobImages[0] := KnobImage1;
   FKnobImages[1] := KnobImage2;
   FKnobImages[2] := KnobImage3;
@@ -769,6 +881,7 @@ begin
 
   lbPlugins.Sorted := true;
   lbPlugins.Items.EndUpdate;
+  gbPlugins.Caption := 'Plugins (' + inttostr(lbPlugins.Count) + ')';
   
   lblStatus.Caption := 'Reading Parameters';
   Application.ProcessMessages;
@@ -788,7 +901,6 @@ end;
 procedure TForm1.UpdateDisplay;
 var
   i,m : integer;
-  param : TMackiePluginParameter;
 begin
   if not(FPluginsLoaded) then
     exit;
@@ -805,8 +917,10 @@ begin
 
       for i := 0 to 31 do
       begin
-        FLabels[i].Color := $00FF0404;
+        FLabels[i].Color := clSilver;
         FLabels[i].Caption := '';
+        FDisplayLabels[i].Color := clSilver;
+        FDisplayLabels[i].Caption := '';
       end;
     end
     else
@@ -819,20 +933,7 @@ begin
       m := GetCurrentModifier;
 
       for i := 0 to 31 do
-      begin
-        param := FCurrentMackiePlugin.GetParameterByIndexes(m, i);
-
-        if (param.IsAssigned) then
-        begin
-          FLabels[i].Color := $00F9E3B7;
-          FLabels[i].Caption := param.ParameterName;
-        end
-        else
-        begin
-          FLabels[i].Color := $00FF0404;
-          FLabels[i].Caption := '';
-        end;
-      end;
+        UpdateDisplayLabel(m, i);
     end;
 
     ebVPotName.Enabled := false;
@@ -843,6 +944,7 @@ begin
     cbVPotParamIncrement.Enabled := false;
     ebVPotIncrement.Enabled := false;
     cbVPotEQParam.Enabled := false;
+    ebVPotDisplayLabel.Enabled := false;
 
     ebVPotName.Text := '';
     rgVPotType.ItemIndex := 0;
@@ -852,6 +954,8 @@ begin
     cbVPotParamIncrement.Checked := false;
     ebVPotIncrement.Text := '';
     cbVPotEQParam.Text := '';
+    ebVPotDisplayLabel.Text := '';
+
 
     if (FCurrentMackiePluginParameter <> nil) then
     begin
@@ -873,6 +977,7 @@ begin
         ebVPotIncrement.Text := '';
 
       cbVPotEQParam.Text := FCurrentMackiePluginParameter.EQVPot;
+      ebVPotDisplayLabel.Text := FCurrentMackiePluginParameter.DisplayLabel;
 
       if FCurrentMackiePluginParameter.IsAssigned then
       begin
@@ -884,12 +989,14 @@ begin
         cbVPotParamIncrement.Enabled := true;
         ebVPotIncrement.Enabled := true;
         cbVPotEQParam.Enabled := (rgPluginType.ItemIndex = 1);
+        ebVPotDisplayLabel.Enabled := true;
       end;
     end;
 
     lbParameters.Repaint;
     lbPlugins.Repaint;
 
+    UpdateKnobImages();
   finally
     FUpdatingDisplay := false;
   end;
@@ -909,7 +1016,7 @@ var
   i : integer;
 begin
   for i := 1 to 31 do
-    FKnobImages[i].Picture.Assign(FKnobImages[0].Picture);
+      FKnobImages[i].Picture.Assign(FKnobImages[0].Picture);
 end;
 
 procedure TForm1.imgTrashCanDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
@@ -970,6 +1077,8 @@ var
   m, p : integer;
   okToContinue : boolean;
 begin
+  CopyImageFromImageList(IDX_BLANK_KNOB_IMAGE, VPotKnobImage);
+
   if not(FPluginsLoaded) then
     exit;
 
@@ -993,10 +1102,11 @@ begin
   if okToContinue then
   begin
     m := GetCurrentModifier;
+    FCurrentParameterKnobIdx := p;
     FCurrentMackiePluginParameter := FCurrentMackiePlugin.GetParameterByIndexes(m,p);
 
     UpdateDisplay;
-  end;
+  end
 end;
 
 procedure TForm1.rgVPotTypeClick(Sender: TObject);
@@ -1005,7 +1115,10 @@ begin
     exit;
 
   if (FUpdatingDisplay = false) and (FCurrentMackiePlugin <> nil) and (FCurrentMackiePluginParameter <> nil) then
+  begin
     FCurrentMackiePluginParameter.DataType := TMackiePluginParameterDataType(ord(rgVPotType.ItemIndex));
+    UpdateKnobImages;
+  end;
 end;
 
 procedure TForm1.ebVPotDefaultChange(Sender: TObject);
@@ -1282,6 +1395,93 @@ begin
     m := 4;
 
   result := m;
+end;
+
+procedure TForm1.CopyImageFromImageList(imgIdx: integer; var img: TImage);
+begin
+  KnobImageList.GetBitmap(imgIdx, img.Picture.Bitmap);
+end;
+
+procedure TForm1.UpdateKnobImages;
+var
+  i : integer;
+  m : integer;
+  param : TMackiePluginParameter;
+begin
+  if not(FPluginsLoaded) then
+    exit;
+
+  m := GetCurrentModifier;
+
+  for i := 0 to 31 do
+  begin
+    if (FCurrentMackiePlugin <> nil) then
+    begin
+      param := FCurrentMackiePlugin.GetParameterByIndexes(m, i);
+      if (param.IsAssigned) then
+        CopyImageFromImageList(ord(param.DataType), FKnobImages[i])
+      else
+        CopyImageFromImageList(IDX_BLANK_KNOB_IMAGE, FKnobImages[i]);
+    end
+    else
+      CopyImageFromImageList(IDX_BLANK_KNOB_IMAGE, FKnobImages[i]);
+  end;
+
+  if (FCurrentMackiePluginParameter <> nil) and (FCurrentMackiePluginParameter.IsAssigned) then
+    CopyImageFromImageList(ord(FCurrentMackiePluginParameter.DataType), VPotKnobImage)
+  else
+    CopyImageFromImageList(IDX_BLANK_KNOB_IMAGE, VPotKnobImage);
+end;
+
+procedure TForm1.UpdateDisplayLabel(modifier, index: integer);
+var
+  param : TMackiePluginParameter;
+
+  function UpperFirstChar(aStr : string) : string;
+  begin
+    if aStr<>'' then
+      aStr[1] := UpCase(aStr[1]);
+
+    result := aStr;
+  end;
+
+begin
+  if not(FPluginsLoaded) then
+    exit;
+
+  if (FCurrentMackiePlugin <> nil) then
+  begin
+    param := FCurrentMackiePlugin.GetParameterByIndexes(modifier, index);
+
+    if (param.IsAssigned) then
+    begin
+      FLabels[index].Color := $00F9E3B7;
+      FLabels[index].Caption := param.ParameterName;
+      FDisplayLabels[index].Color := $00F4C86C;
+      FDisplayLabels[index].Font.Color := clBlack;
+      if (param.DisplayLabel <> '') then
+        FDisplayLabels[index].Caption := trim(param.DisplayLabel)
+      else
+        FDisplayLabels[index].Caption := TStringCruncher.CrunchString(param.ParameterName,6);
+      FKnobImages[index].Hint:= UpperFirstChar(MACKIE_PARAMETER_DATA_TYPES[param.DataType]);
+    end
+    else
+    begin
+      FLabels[index].Color := clSilver;
+      FLabels[index].Caption := '';
+      FDisplayLabels[index].Caption := '';
+      FDisplayLabels[index].Color := clSilver;
+      FKnobImages[index].Hint:= '';
+    end;
+  end
+  else
+  begin
+    FLabels[index].Color := clSilver;
+    FLabels[index].Caption := '';
+    FDisplayLabels[index].Caption := '';
+    FDisplayLabels[index].Color := clSilver;
+    FKnobImages[index].Hint:= '';
+  end;
 end;
 
 procedure TForm1.btnReloadClick(Sender: TObject);

@@ -169,6 +169,7 @@ begin
   result := tempstr;
 end;
 
+{$PUSH}{$WARN 5091 OFF}{$WARN 5092 OFF} // turn off warning for uninitialized variables... they're being initialized elsewhere
 procedure TXMLParser.ProcessAttributes(var CurrentObject : TXMLElement; instr : string);
 var
   myTag,myValue : string;
@@ -230,6 +231,7 @@ begin // Process Attributes
   while GetAttribute(instr,myTag,myValue) do
     CurrentObject.NewAttribute(myTag,myValue);
 end;
+{$POP}
 
 function TXMLParser.FirstChar(astring : string) : char;
 var
@@ -244,6 +246,7 @@ begin
     end;
 end;
 
+{$PUSH}{$WARN 5092 OFF} // turn off warning for uninitialized variables... they're being initialized elsewhere
 function TXMLParser.NormaliseSpaces (instr : string) : string;
 var
   loop : integer;
@@ -277,6 +280,7 @@ begin
   until no_duplicate_whitespaces;
   result := instr;
 end;
+{$POP}
 
 function TXMLParser.GetToken (var CurrentObject : TXMLElement; SourceType : TXMLSourceType) : TokenType;
 var

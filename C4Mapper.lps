@@ -2,14 +2,14 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="10"/>
+    <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="12">
+    <Units Count="14">
       <Unit0>
         <Filename Value="C4Mapper.dpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos Y="26"/>
-        <UsageCount Value="40"/>
+        <CursorPos X="80" Y="17"/>
+        <UsageCount Value="55"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit0>
@@ -19,10 +19,13 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <UsageCount Value="40"/>
+        <TopLine Value="1436"/>
+        <CursorPos X="93" Y="1466"/>
+        <UsageCount Value="55"/>
         <Bookmarks Count="1">
-          <Item0 Y="306" ID="9"/>
+          <Item0 X="9" Y="445" ID="9"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -32,7 +35,9 @@
         <Filename Value="uCWPlugin.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="40"/>
+        <TopLine Value="164"/>
+        <CursorPos X="77" Y="23"/>
+        <UsageCount Value="55"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit2>
@@ -40,9 +45,8 @@
         <Filename Value="uMackiePlugin.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="152"/>
-        <CursorPos X="39" Y="153"/>
-        <UsageCount Value="40"/>
+        <CursorPos X="30" Y="17"/>
+        <UsageCount Value="55"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit3>
@@ -50,187 +54,225 @@
         <Filename Value="XMLClass.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="67"/>
-        <CursorPos X="36" Y="310"/>
-        <UsageCount Value="40"/>
+        <TopLine Value="86"/>
+        <CursorPos X="24" Y="116"/>
+        <UsageCount Value="55"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit4>
       <Unit5>
         <Filename Value="XMLDef.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="133"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="156"/>
-        <UsageCount Value="40"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="55"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit5>
       <Unit6>
         <Filename Value="FolderHelper.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
         <TopLine Value="4"/>
-        <CursorPos X="20" Y="25"/>
-        <UsageCount Value="40"/>
+        <CursorPos X="65" Y="32"/>
+        <UsageCount Value="55"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit6>
       <Unit7>
+        <Filename Value="ustringcruncher.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uStringCruncher"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="112"/>
+        <CursorPos X="3" Y="125"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit7>
+      <Unit8>
         <Filename Value="xmlparz.pas"/>
         <UnitName Value="XMLParz"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="50" Y="304"/>
         <UsageCount Value="40"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
-      </Unit7>
-      <Unit8>
+      </Unit8>
+      <Unit9>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2716"/>
         <CursorPos Y="2740"/>
         <UsageCount Value="14"/>
-      </Unit8>
-      <Unit9>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit9>
+      <Unit10>
         <Filename Value="C:\lazarus\lcl\include\speedbutton.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="890"/>
         <CursorPos X="50" Y="906"/>
         <UsageCount Value="14"/>
-      </Unit9>
-      <Unit10>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit10>
+      <Unit11>
         <Filename Value="C:\lazarus\lcl\graphics.pp"/>
         <UnitName Value="Graphics"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="256"/>
         <CursorPos X="3" Y="273"/>
         <UsageCount Value="12"/>
-      </Unit10>
-      <Unit11>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit11>
+      <Unit12>
         <Filename Value="uMain.dfm"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2220"/>
         <CursorPos X="8" Y="2261"/>
         <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
-      </Unit11>
+      </Unit12>
+      <Unit13>
+        <Filename Value="c:\lazarus2\lcl\interfaces\fpgui\fpguicrosshelpers.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="5" Y="10"/>
+        <UsageCount Value="10"/>
+      </Unit13>
     </Units>
-    <JumpHistory Count="29" HistoryIndex="28">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="784" Column="27" TopLine="771"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="652" TopLine="629"/>
       </Position1>
       <Position2>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="781" Column="6" TopLine="769"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="260" TopLine="238"/>
       </Position2>
       <Position3>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="465" TopLine="439"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="622" TopLine="599"/>
       </Position3>
       <Position4>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="1262" Column="39" TopLine="1241"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="623" TopLine="599"/>
       </Position4>
       <Position5>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="448" Column="24" TopLine="428"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="624" TopLine="599"/>
       </Position5>
       <Position6>
-        <Filename Value="uMain.pas"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="626" TopLine="599"/>
       </Position6>
       <Position7>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="131" Column="24" TopLine="96"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="627" TopLine="599"/>
       </Position7>
       <Position8>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="449" Column="24" TopLine="413"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="628" TopLine="599"/>
       </Position8>
       <Position9>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="463" Column="24" TopLine="427"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="629" TopLine="599"/>
       </Position9>
       <Position10>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="786" TopLine="750"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="630" TopLine="599"/>
       </Position10>
       <Position11>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="1261" Column="24" TopLine="1225"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="632" TopLine="599"/>
       </Position11>
       <Position12>
-        <Filename Value="uCWPlugin.pas"/>
-        <Caret Line="355" TopLine="339"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="633" TopLine="599"/>
       </Position12>
       <Position13>
-        <Filename Value="uCWPlugin.pas"/>
-        <Caret Line="383" Column="82" TopLine="340"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="635" TopLine="599"/>
       </Position13>
       <Position14>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="1266" Column="28" TopLine="1243"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="636" TopLine="599"/>
       </Position14>
       <Position15>
-        <Filename Value="uCWPlugin.pas"/>
-        <Caret Line="108" TopLine="107"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="637" TopLine="600"/>
       </Position15>
       <Position16>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="11" Column="6"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="640" TopLine="603"/>
       </Position16>
       <Position17>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="143" Column="61" TopLine="121"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="642" TopLine="605"/>
       </Position17>
       <Position18>
-        <Filename Value="uCWPlugin.pas"/>
-        <Caret Line="267" Column="15" TopLine="206"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="643" TopLine="606"/>
       </Position18>
       <Position19>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="154" Column="60" TopLine="133"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="644" TopLine="607"/>
       </Position19>
       <Position20>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="182" Column="41" TopLine="159"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="646" TopLine="609"/>
       </Position20>
       <Position21>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="305" Column="7" TopLine="271"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="647" TopLine="610"/>
       </Position21>
       <Position22>
-        <Filename Value="uMain.pas"/>
-        <Caret Line="1306" TopLine="1263"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="648" TopLine="611"/>
       </Position22>
       <Position23>
-        <Filename Value="XMLDef.pas"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="649" TopLine="612"/>
       </Position23>
       <Position24>
-        <Filename Value="XMLDef.pas"/>
-        <Caret Line="168" Column="7" TopLine="147"/>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="641" Column="52" TopLine="620"/>
       </Position24>
       <Position25>
-        <Filename Value="XMLDef.pas"/>
-        <Caret Line="165" Column="29" TopLine="40"/>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="929" Column="17" TopLine="906"/>
       </Position25>
       <Position26>
-        <Filename Value="XMLDef.pas"/>
-        <Caret Line="37" Column="17" TopLine="15"/>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="923" Column="17" TopLine="888"/>
       </Position26>
       <Position27>
-        <Filename Value="XMLClass.pas"/>
-        <Caret Line="683" Column="15" TopLine="645"/>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="882" Column="2" TopLine="872"/>
       </Position27>
       <Position28>
         <Filename Value="uMain.pas"/>
-        <Caret Line="1149" Column="7" TopLine="1141"/>
+        <Caret Line="224" Column="26" TopLine="208"/>
       </Position28>
       <Position29>
-        <Filename Value="uCWPlugin.pas"/>
-        <Caret Line="296" TopLine="274"/>
+        <Filename Value="uMain.pas"/>
+        <Caret Line="1458" Column="26" TopLine="1443"/>
       </Position29>
+      <Position30>
+        <Filename Value="uMackiePlugin.pas"/>
+        <Caret Line="60" Column="14" TopLine="44"/>
+      </Position30>
     </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="uMackiePlugin.pas"/>
+        <Line Value="260"/>
+      </Item1>
+    </BreakPoints>
+  </Debugging>
 </CONFIG>
